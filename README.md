@@ -3,15 +3,16 @@
 **A read-only agent network for turning onchain activity into inspectable evidence.**
 
 MORCHEL is an experiment in narrow agents, narrow permissions, and visible handoffs.
-The prototype currently exposes two roots:
+The prototype currently exposes three roots:
 
 ```text
-launch event -> MINT -> evidence card -> TRACE -> relationship report -> human
+launch event -> MINT -> evidence card -> TRACE -> relationship report -> RANK -> human
 ```
 
 - **MINT** reconstructs the wallet behind a launch.
 - **TRACE** challenges the resulting evidence card by looking for reproducible relationships.
-- **Four additional roots remain dormant.** Their responsibilities will be published as they wake.
+- **RANK** reduces surviving evidence to `ARCHIVE`, `WATCH`, or `WAKE_HUMAN`.
+- **Three additional roots remain dormant.** Their responsibilities will be published as they wake.
 
 MORCHEL does not predict price, place trades, hold keys, sign messages, or move funds.
 
@@ -32,13 +33,14 @@ Run the tests:
 python -m unittest discover -s tests -v
 ```
 
-## Why two roots?
+## Why three roots?
 
 One model should not research, judge, and act in the same context. MORCHEL splits the work:
 
 1. MINT normalizes observable facts into a fixed schema.
 2. TRACE attempts to reproduce or reject the relationships implied by those facts.
-3. A human decides what the report means.
+3. RANK decides whether the surviving evidence deserves scarce human attention.
+4. A human decides what the report means.
 
 Every handoff is JSON-serializable and inspectable. No freeform agent output is trusted as a command.
 
@@ -60,7 +62,7 @@ See [SECURITY.md](SECURITY.md) and [docs/architecture.md](docs/architecture.md).
 
 `ROOT 01 / MINT: AWAKE`  
 `ROOT 02 / TRACE: AWAKE`  
-`ROOT 03-06: DORMANT`
+`ROOT 03 / RANK: AWAKE`  
+`ROOT 04-06: DORMANT`
 
 This repository is an educational prototype. It is not financial advice and is not a trading system.
-

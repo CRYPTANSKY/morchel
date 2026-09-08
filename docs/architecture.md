@@ -8,7 +8,9 @@ flowchart LR
     M --> C[EvidenceCard v1]
     C --> T[TRACE]
     T --> R[TraceReport v1]
-    R --> H[Human review]
+    R --> K[RANK]
+    K --> D[Attention state]
+    D --> H[Human review]
 ```
 
 ## Root 01: MINT
@@ -27,9 +29,18 @@ Output: `morchel.trace.v1`.
 TRACE tests explicit relationships and labels each one `reproduced`, `not_reproduced`,
 `observed`, or `insufficient_evidence`. It emits no executable actions.
 
+## Root 03: RANK
+
+Inputs: an `EvidenceCard` and its `TraceReport`.  
+Output: `morchel.rank.v1`.
+
+RANK scores only inspectable properties: source coverage and the number of relationships
+TRACE reproduced or observed. Its complete output vocabulary is `ARCHIVE`, `WATCH`, and
+`WAKE_HUMAN`. These are attention states, not price predictions or trade instructions.
+
 ## Dormant roots
 
-Roots 03 through 06 are intentionally undocumented until activated. This prevents the
+Roots 04 through 06 are intentionally undocumented until activated. This prevents the
 story from outrunning the code and keeps each public release independently inspectable.
 
 ## Non-goals
@@ -39,4 +50,3 @@ story from outrunning the code and keeps each public release independently inspe
 - order execution;
 - wallet automation;
 - autonomous financial decisions.
-

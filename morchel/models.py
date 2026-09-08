@@ -78,3 +78,16 @@ class TraceReport:
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+
+@dataclass(frozen=True)
+class RankDecision:
+    schema_version: str
+    card_id: str
+    state: str
+    score: int
+    reasons: tuple[str, ...]
+    human_review_required: bool
+    executable_actions: tuple[str, ...] = field(default_factory=tuple)
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
