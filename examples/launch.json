@@ -1,0 +1,18 @@
+{
+  "chain": "robinhood-chain-test-data",
+  "token": "MORCHEL-DEMO",
+  "deployer": "0x7a3100000000000000000000000000000000c09e",
+  "funded_by": "0x18f40000000000000000000000000000000022b1",
+  "prior_launches": ["DEMO-001", "DEMO-002", "DEMO-003"],
+  "early_buyers": [
+    "0x1100000000000000000000000000000000000001",
+    "0x2200000000000000000000000000000000000002",
+    "0x3300000000000000000000000000000000000003"
+  ],
+  "fee_destination": "0x18f40000000000000000000000000000000022b1",
+  "source_urls": [
+    "https://example.invalid/demo/source-1",
+    "https://example.invalid/demo/source-2"
+  ]
+}
+
