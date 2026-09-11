@@ -12,11 +12,14 @@ MORCHEL is deliberately read-only.
 
 ## Data model
 
-The CLI reads one local JSON document supplied by the operator. Both roots return fixed,
-JSON-serializable dataclasses. TRACE accepts only a validated `EvidenceCard`, not arbitrary prompts.
+The CLI reads one local JSON document supplied by the operator. All six roots return fixed,
+JSON-serializable dataclasses. Every handoff accepts only validated structured data, never
+arbitrary instructions. Every root exposes an empty `executable_actions` tuple.
+
+SEAL fails closed: if any declared source cannot be recovered, WAKE returns `HOLD` even when
+RANK previously returned `WAKE_HUMAN`.
 
 ## Reporting
 
 Please report vulnerabilities through GitHub's private vulnerability reporting feature.
 Do not include real secrets, private wallet data, or personal information in an issue.
-
