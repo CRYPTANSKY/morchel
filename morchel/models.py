@@ -29,8 +29,7 @@ class LaunchObservation:
         if missing:
             raise ValueError(f"missing required fields: {', '.join(missing)}")
         return cls(
-            chain=str(raw["chain"]),
-            token=str(raw["token"]),
+            chain=str(raw["chain"]), token=str(raw["token"]),
             deployer=_address(str(raw["deployer"])),
             funded_by=_address(str(raw["funded_by"])),
             prior_launches=tuple(str(x) for x in raw.get("prior_launches", [])),
@@ -55,8 +54,7 @@ class EvidenceCard:
     source_coverage: float
     permissions: tuple[str, ...] = ("read_public_data", "emit_evidence")
 
-    def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+    def as_dict(self) -> dict[str, Any]: return asdict(self)
 
 
 @dataclass(frozen=True)
@@ -75,8 +73,7 @@ class TraceReport:
     human_review_required: bool = True
     executable_actions: tuple[str, ...] = field(default_factory=tuple)
 
-    def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+    def as_dict(self) -> dict[str, Any]: return asdict(self)
 
 
 @dataclass(frozen=True)
@@ -89,5 +86,39 @@ class RankDecision:
     human_review_required: bool
     executable_actions: tuple[str, ...] = field(default_factory=tuple)
 
-    def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+    def as_dict(self) -> dict[str, Any]: return asdict(self)
+
+
+@dataclass(frozen=True)
+class ReplayReport:
+    schema_version: str
+    card_id: str
+    archive_matches: tuple[str, ...]
+    recurrence_found: bool
+    executable_actions: tuple[str, ...] = field(default_factory=tuple)
+
+    def as_dict(self) -> dict[str, Any]: return asdict(self)
+
+
+@dataclass(frozen=True)
+class SealReport:
+    schema_version: str
+    card_id: str
+    recovered_sources: tuple[str, ...]
+    missing_sources: tuple[str, ...]
+    reproducible: bool
+    executable_actions: tuple[str, ...] = field(default_factory=tuple)
+
+    def as_dict(self) -> dict[str, Any]: return asdict(self)
+
+
+@dataclass(frozen=True)
+class WakeNotice:
+    schema_version: str
+    card_id: str
+    state: str
+    reason: str
+    human_review_required: bool = True
+    executable_actions: tuple[str, ...] = field(default_factory=tuple)
+
+    def as_dict(self) -> dict[str, Any]: return asdict(self)

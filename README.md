@@ -1,68 +1,60 @@
 # MORCHEL
 
-**A read-only agent network for turning onchain activity into inspectable evidence.**
-
-MORCHEL is an experiment in narrow agents, narrow permissions, and visible handoffs.
-The prototype currently exposes three roots:
+**A six-root, read-only agent network for turning onchain observations into inspectable evidence.**
 
 ```text
-launch event -> MINT -> evidence card -> TRACE -> relationship report -> RANK -> human
+observation -> MINT -> TRACE -> RANK -> REPLAY -> SEAL -> WAKE -> human
 ```
 
-- **MINT** reconstructs the wallet behind a launch.
-- **TRACE** challenges the resulting evidence card by looking for reproducible relationships.
-- **RANK** reduces surviving evidence to `ARCHIVE`, `WATCH`, or `WAKE_HUMAN`.
-- **Three additional roots remain dormant.** Their responsibilities will be published as they wake.
+| Root | Responsibility | Authority |
+|---|---|---|
+| MINT | normalize supplied public observations | emit an evidence card |
+| TRACE | challenge explicit relationships | emit a trace report |
+| RANK | ration human attention | ARCHIVE / WATCH / WAKE_HUMAN |
+| REPLAY | compare with supplied archive history | emit recurrence evidence |
+| SEAL | verify that declared sources remain recoverable | seal or reject the packet |
+| WAKE | enforce the final interruption boundary | notify a human or HOLD |
 
-MORCHEL does not predict price, place trades, hold keys, sign messages, or move funds.
+All six roots are awake. None can predict price, access wallets, sign messages, place trades,
+or move funds. `WAKE_HUMAN` is an attention state, never an execution instruction.
 
-## Run the prototype
+## Run
 
 Requires Python 3.11+ and no third-party packages.
 
 ```bash
 python -m morchel examples/launch.json
-```
-
-Expected output is a JSON relationship report. The report includes the original evidence,
-TRACE findings, source coverage, and the mandatory `human_review_required` flag.
-
-Run the tests:
-
-```bash
+python -m morchel examples/case_001.json
 python -m unittest discover -s tests -v
 ```
 
-## Why three roots?
+## CASE 001
 
-One model should not research, judge, and act in the same context. MORCHEL splits the work:
-
-1. MINT normalizes observable facts into a fixed schema.
-2. TRACE attempts to reproduce or reject the relationships implied by those facts.
-3. RANK decides whether the surviving evidence deserves scarce human attention.
-4. A human decides what the report means.
-
-Every handoff is JSON-serializable and inspectable. No freeform agent output is trusted as a command.
+The first six-root fixture deliberately ends in disagreement: `3 ACCEPT / 3 OBJECT`.
+RANK crosses its threshold, but SEAL cannot recover one declared source, so WAKE returns `HOLD`.
+Read the complete walkthrough in [docs/case-001.md](docs/case-001.md).
 
 ## Permission boundary
 
 | Capability | Status |
 |---|---|
 | Read supplied public data | Allowed |
-| Save evidence locally | Allowed |
-| Produce a report | Allowed |
+| Save inspectable evidence | Allowed |
+| Produce reports and attention states | Allowed |
 | Access a wallet | Forbidden |
 | Sign a transaction | Forbidden |
-| Place a trade | Forbidden |
-| Move funds | Forbidden |
+| Place a trade or move funds | Forbidden |
 
-See [SECURITY.md](SECURITY.md) and [docs/architecture.md](docs/architecture.md).
+See [SECURITY.md](SECURITY.md), [architecture](docs/architecture.md), and [CHANGELOG.md](CHANGELOG.md).
 
-## Current status
+## Status
 
 `ROOT 01 / MINT: AWAKE`  
 `ROOT 02 / TRACE: AWAKE`  
 `ROOT 03 / RANK: AWAKE`  
-`ROOT 04-06: DORMANT`
+`ROOT 04 / REPLAY: AWAKE`  
+`ROOT 05 / SEAL: AWAKE`  
+`ROOT 06 / WAKE: AWAKE`
 
-This repository is an educational prototype. It is not financial advice and is not a trading system.
+This repository is an educational prototype. All included observations are synthetic fixtures.
+It is not financial advice and it is not a trading system.

@@ -1,52 +1,38 @@
 # Architecture
 
-MORCHEL uses a one-way, inspectable handoff between narrow roots.
+MORCHEL uses a one-way, inspectable handoff between six narrow roots.
 
 ```mermaid
-flowchart LR
+flowchart TD
     O[Public observation] --> M[MINT]
-    M --> C[EvidenceCard v1]
-    C --> T[TRACE]
-    T --> R[TraceReport v1]
-    R --> K[RANK]
-    K --> D[Attention state]
-    D --> H[Human review]
+    M --> T[TRACE]
+    T --> K[RANK]
+    K --> P[REPLAY]
+    P --> S[SEAL]
+    S --> W[WAKE]
+    W --> H[Human review]
 ```
 
-## Root 01: MINT
+## The six roots
 
-Input: a supplied launch observation.  
-Output: `morchel.evidence.v1`.
+1. **MINT** normalizes supplied public observations into `EvidenceCard`.
+2. **TRACE** tries to reproduce explicit wallet relationships.
+3. **RANK** returns only `ARCHIVE`, `WATCH`, or `WAKE_HUMAN`.
+4. **REPLAY** compares the card with explicitly supplied archive matches.
+5. **SEAL** records which declared sources can still be recovered.
+6. **WAKE** may interrupt a human only when RANK passes and SEAL is reproducible.
 
-MINT validates public addresses, normalizes the observation, computes a stable card ID,
-and records source coverage. It has no ability to interpret the evidence as a trade.
+Every handoff is a fixed JSON-serializable dataclass. Every root exposes an empty
+`executable_actions` tuple. None can access a wallet, sign, trade, or move funds.
 
-## Root 02: TRACE
+## Failure-closed rule
 
-Input: an `EvidenceCard`.  
-Output: `morchel.trace.v1`.
-
-TRACE tests explicit relationships and labels each one `reproduced`, `not_reproduced`,
-`observed`, or `insufficient_evidence`. It emits no executable actions.
-
-## Root 03: RANK
-
-Inputs: an `EvidenceCard` and its `TraceReport`.  
-Output: `morchel.rank.v1`.
-
-RANK scores only inspectable properties: source coverage and the number of relationships
-TRACE reproduced or observed. Its complete output vocabulary is `ARCHIVE`, `WATCH`, and
-`WAKE_HUMAN`. These are attention states, not price predictions or trade instructions.
-
-## Dormant roots
-
-Roots 04 through 06 are intentionally undocumented until activated. This prevents the
-story from outrunning the code and keeps each public release independently inspectable.
+`WAKE_HUMAN` from RANK is not sufficient. A missing source forces WAKE to return `HOLD`,
+even when the attention score is high. See [CASE 001](case-001.md).
 
 ## Non-goals
 
-- price forecasting;
-- token scoring;
-- order execution;
-- wallet automation;
+- price forecasting or PNL optimization;
+- token recommendations;
+- order execution or wallet automation;
 - autonomous financial decisions.
